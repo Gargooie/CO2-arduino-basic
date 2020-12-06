@@ -1,13 +1,33 @@
+//requires display refresh fix
+// pins a4,a5 for display, d5 for mhz19
+
 #define pwmPin 5
 #define LedPin 13
 
+#include <Wire.h> // библиотека для управления устройствами по I2C 
+#include <LiquidCrystal_I2C.h> // подключаем библиотеку для QAPASS 1602
+
+LiquidCrystal_I2C LCD(0x27,16,2); // присваиваем имя LCD для дисплея
+
 int prevVal = LOW;
-long th, tl, h, l, ppm;
+long th, tl, h, l, ppm, diff;
 
 void setup() {
   Serial.begin(9600);
   pinMode(pwmPin, INPUT);
   pinMode(LedPin, OUTPUT);
+  pinMode(11, OUTPUT); // объявляем пин 11 как выход
+
+
+   LCD.init(); // инициализация LCD дисплея
+   LCD.backlight(); // включение подсветки дисплея
+   
+   LCD.setCursor(0,0);     // ставим курсор на 1 символ первой строки
+   LCD.print("PPM: ");     // печатаем сообщение на первой строке
+
+   LCD.setCursor(0,1);     // ставим курсор на 1 символ первой строки
+   LCD.print("DO HOPMbI: ");     // печатаем сообщение на первой строке
+       
 }
 
 void loop() {
@@ -29,9 +49,30 @@ void loop() {
       th = l - h;
       prevVal = myVal;
       ppm = 5000 * (th - 2) / (th + tl - 4);
+      diff = ppm-600;
 
       //delay(60000);
       Serial.println("PPM = " + String(ppm));
     }
   }
+
+   LCD.setCursor(13,0);     // ставим курсор на 1 символ первой строки
+   LCD.print(ppm);     // печатаем сообщение на первой строке
+
+   LCD.setCursor(13,1);     // ставим курсор на 1 символ первой строки
+   LCD.print(diff);     // печатаем сообщение на первой строке
+
+    if (ppm >800) {
+      for (int x = 0; x < 500 ; x++){
+     tone (11, x);
+     delay(1);
+     }
+   // уменьшаем частоту звука
+   for (int x = 500; x > 0 ; x--){
+     tone (11, x);
+     delay(1);
+     }
+    }
+
+
 }
