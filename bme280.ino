@@ -2,7 +2,7 @@
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BME280.h>
 
-#define SEALEVELPRESSURE_HPA (1013.25)
+#define SEALEVELPRESSURE_HPA (1041.25)
 
 Adafruit_BME280 bme;
 
@@ -21,8 +21,8 @@ void loop() {
   Serial.println("*C");
 
   Serial.print("Pressure = ");
-  Serial.print(bme.readPressure() / 100.0F);
-  Serial.println("hPa");
+  Serial.print(bme.readPressure() *0.007500637554192,2);
+  Serial.println("mmHg");
 
   Serial.print("Approx. Altitude = ");
   Serial.print(bme.readAltitude(SEALEVELPRESSURE_HPA));
