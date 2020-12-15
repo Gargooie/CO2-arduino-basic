@@ -1,3 +1,4 @@
+//a4-sda a5-scl, 5 seconds delay
 #include <Wire.h>
 #include <Adafruit_Sensor.h>
 #include <Adafruit_BME280.h>
@@ -33,5 +34,5 @@ void loop() {
   Serial.println("%");
 
   Serial.println();
-  delay(1000);
+  delay(5000);
 }
